@@ -1,0 +1,47 @@
+services:
+  postgres_alerta_recife:
+    image: postgis/postgis:16-3.4
+    container_name: alerta_recife_database
+    environment:
+      - POSTGRES_USER=${postgres_user}
+      - POSTGRES_PASSWORD=${postgres_password}
+      - POSTGRES_DB=${postgres_database}
+    ports:
+      - "5005:5432"
+    networks:
+      - internal
+    volumes:
+      - alerta_recife:/var/lib/postgresql/data
+
+  alerta_recife_project:
+    build:
+      context: .
+      target: runner
+    image: alerta_recife:latest
+    container_name: alerta_recife_project
+    depends_on:
+      - postgres_alerta_recife
+    env_file:
+      - .env
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_alerta_recife:5432/${postgres_database}
+      - SPRING_DATASOURCE_USERNAME=${spring_user}
+      - SPRING_DATASOURCE_PASSWORD=${spring_password}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
+      - SPRING_FLYWAY_ENABLE=true
+      - SPRING_FLYWAY_CLEAN_DISABLED=false
+      - SERVER_PORT=4010
+      - SPRING_JPA_OPEN_IN_VIEW=false
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.PostgreSQLDialect
+
+    ports:
+      - "4010:4010"
+    networks:
+      - internal
+
+volumes:
+  alerta_recife:
+
+networks:
+  internal:
+    external: true
