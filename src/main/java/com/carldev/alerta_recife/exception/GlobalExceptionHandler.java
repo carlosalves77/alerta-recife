@@ -1,0 +1,39 @@
+package com.carldev.alerta_recife.exception;
+
+import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
+@ControllerAdvice
+public class GlobalExceptionHandler extends RuntimeException {
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException e) {
+
+        Map<String, String> error = new HashMap<>();
+
+        e.getBindingResult().getFieldErrors().forEach(errors ->
+                error.put(errors.getField(), errors.getDefaultMessage()));
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(InvalidSpatialDataException.class)
+    public ResponseEntity<ErrorResponseDTO> invalidSpatialDataException(InvalidSpatialDataException e) {
+
+        ErrorResponseDTO responseDTO = new ErrorResponseDTO(
+             HttpStatus.BAD_REQUEST.value(),
+             e.getMessage(),
+             LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(responseDTO.Status()).body(responseDTO);
+    }
+}
