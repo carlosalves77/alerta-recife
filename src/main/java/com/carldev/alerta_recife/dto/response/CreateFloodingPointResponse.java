@@ -1,14 +1,15 @@
-package com.carldev.alerta_recife.dto.request;
+package com.carldev.alerta_recife.dto.response;
 
 import com.carldev.alerta_recife.utils.IntensityOfTheFlooding;
-import org.locationtech.jts.geom.Point;
 
 public record CreateFloodingPointResponse(
         String logger,
         String referencePoint,
         String neighborhood,
-        Point coordinates,
+        Double latitude,
+        Double longitude,
         IntensityOfTheFlooding intensity,
         Integer confirmationVotes
 ) {
+
 }
