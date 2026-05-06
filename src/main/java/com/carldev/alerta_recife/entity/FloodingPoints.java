@@ -5,6 +5,8 @@ import com.carldev.alerta_recife.utils.IntensityOfTheFlooding;
 import jakarta.persistence.*;
 import lombok.*;
 import org.locationtech.jts.geom.Point;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EnableJpaAuditing
 @Table(name = "flooding_points")
 public class FloodingPoints {
 
@@ -38,6 +41,7 @@ public class FloodingPoints {
 
     private boolean active = true;
 
+    @CreatedDate
     private LocalDateTime registryDate = LocalDateTime.now();
 
     private LocalDateTime actualizationDate;
