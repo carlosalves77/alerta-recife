@@ -5,10 +5,15 @@ import jakarta.validation.constraints.NotNull;
 
 public record CreateFloodingPointRequest(
 
+        @NotBlank(message = "A rua é obrigatório")
+        String street,
+
         @NotBlank(message = "O nome do relator é obrigatório")
         String logger,
 
         String referencePoint,
+
+        String description,
 
         @NotBlank(message = "O bairro é obrigatório")
         String neighborhood,
