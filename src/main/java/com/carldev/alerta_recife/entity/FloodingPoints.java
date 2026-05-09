@@ -25,10 +25,15 @@ public class FloodingPoints {
     private Long id;
 
     @Column(nullable = false)
+    private String street;
+
+    @Column(nullable = false)
     private String logger;
 
     @Column(name = "reference_point")
     private String referencePoint;
+
+    private String description;
 
     @Column(nullable = false)
     private String neighborhood;
