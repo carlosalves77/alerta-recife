@@ -9,11 +9,13 @@ public class GetFloodingPointsMapper {
 
         return new GetAllFloodingPointResponse(
                 floodingPoints.getId(),
+                floodingPoints.getStreet(),
                 floodingPoints.getLogger(),
                 floodingPoints.getReferencePoint(),
                 floodingPoints.getNeighborhood(),
-                floodingPoints.getCoordinates().getX(),
+                floodingPoints.getDescription(),
                 floodingPoints.getCoordinates().getY(),
+                floodingPoints.getCoordinates().getX(),
                 floodingPoints.getIntensity(),
                 floodingPoints.getConfirmationVotes()
         );
