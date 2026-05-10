@@ -1,19 +1,18 @@
 package com.carldev.alerta_recife.dto.response;
 
 import com.carldev.alerta_recife.utils.IntensityOfTheFlooding;
-import org.locationtech.jts.geom.Point;
 
-import java.time.LocalDateTime;
-
-
-public record CreateFloodingPointRequest (
+public record GetAllFloodingPointResponse(
+        Long id,
+        String street,
         String logger,
         String referencePoint,
         String neighborhood,
-        Point coordinates,
-        String intensity,
-        boolean active,
-        LocalDateTime registryDate,
+        String description,
+        Double latitude,
+        Double longitude,
+        IntensityOfTheFlooding intensity,
         Integer confirmationVotes
 ) {
+
 }
