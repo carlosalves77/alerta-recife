@@ -3,6 +3,8 @@ package com.carldev.alerta_recife.dto.request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.List;
+
 public record CreateFloodingPointRequest(
 
         @NotBlank(message = "A rua é obrigatório")
@@ -26,6 +28,8 @@ public record CreateFloodingPointRequest(
 
 
         @NotBlank(message = "A intensidade do alagamento é obrigatória")
-        String intensity
+        String intensity,
+
+        List<String> images
 ) {
 }
