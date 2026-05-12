@@ -4,6 +4,7 @@ import com.carldev.alerta_recife.dto.request.CreateFloodingPointRequest;
 import com.carldev.alerta_recife.dto.response.CreateFloodingPointResponse;
 import com.carldev.alerta_recife.dto.response.UpdateConfirmationVotesFloodingPointResponse;
 import com.carldev.alerta_recife.dto.response.UpdateIntensityFloodingPointResponse;
+import com.carldev.alerta_recife.entity.FloodingPointImage;
 import com.carldev.alerta_recife.entity.FloodingPoints;
 import com.carldev.alerta_recife.utils.IntensityOfTheFlooding;
 import org.locationtech.jts.geom.Coordinate;
@@ -12,10 +13,15 @@ import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class FloodingPointsMapper {
 
     public static CreateFloodingPointResponse toDto(FloodingPoints floodingPoints) {
+
+        List<String> urls = floodingPoints.getImages().stream().map(FloodingPointImage::getImageUrl)
+                .toList();
+
 
         return new CreateFloodingPointResponse(
                 floodingPoints.getId(),
@@ -27,7 +33,8 @@ public class FloodingPointsMapper {
                 floodingPoints.getCoordinates().getY(),
                 floodingPoints.getCoordinates().getX(),
                 floodingPoints.getIntensity(),
-                floodingPoints.getConfirmationVotes()
+                floodingPoints.getConfirmationVotes(),
+                urls
         );
     }
 
