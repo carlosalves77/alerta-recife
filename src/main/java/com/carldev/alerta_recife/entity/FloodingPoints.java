@@ -9,6 +9,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Setter
@@ -53,5 +55,16 @@ public class FloodingPoints {
 
     private Integer confirmationVotes = 0;
 
+    @OneToMany(mappedBy = "floodingPoint", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FloodingPointImage> images = new ArrayList<>();
 
+    public void addImage(FloodingPointImage image) {
+
+        if (this.images == null) {
+            this.images = new ArrayList<>();
+        }
+
+        images.add(image);
+        image.setFloodingPoint(this);
+    }
 }
