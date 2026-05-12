@@ -2,6 +2,8 @@ package com.carldev.alerta_recife.dto.response;
 
 import com.carldev.alerta_recife.utils.IntensityOfTheFlooding;
 
+import java.util.List;
+
 public record CreateFloodingPointResponse(
         Long id,
         String street,
@@ -12,7 +14,8 @@ public record CreateFloodingPointResponse(
         Double latitude,
         Double longitude,
         IntensityOfTheFlooding intensity,
-        Integer confirmationVotes
+        Integer confirmationVotes,
+        List<String> images
 ) {
 
 }
