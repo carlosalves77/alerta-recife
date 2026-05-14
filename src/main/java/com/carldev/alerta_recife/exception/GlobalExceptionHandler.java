@@ -1,6 +1,5 @@
 package com.carldev.alerta_recife.exception;
 
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,6 +12,7 @@ import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends RuntimeException {
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException e) {
@@ -29,11 +29,36 @@ public class GlobalExceptionHandler extends RuntimeException {
     public ResponseEntity<ErrorResponseDTO> invalidSpatialDataException(InvalidSpatialDataException e) {
 
         ErrorResponseDTO responseDTO = new ErrorResponseDTO(
-             HttpStatus.BAD_REQUEST.value(),
-             e.getMessage(),
-             LocalDateTime.now()
+                HttpStatus.BAD_REQUEST.value(),
+                e.getMessage(),
+                LocalDateTime.now()
         );
 
         return ResponseEntity.status(responseDTO.Status()).body(responseDTO);
+    }
+
+    @ExceptionHandler(FloodingPointIdException.class)
+    public ResponseEntity<ErrorResponseDTO> handleIfFloodingPointNotFoundException
+            (FloodingPointIdException e) {
+
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
+                HttpStatus.NOT_FOUND.value(),
+                e.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(errorResponseDTO.Status()).body(errorResponseDTO);
+    }
+
+    @ExceptionHandler(NearbyFloodingPointException.class)
+    public ResponseEntity<ErrorResponseDTO> handleIfHasNearbyFloodingPoints(NearbyFloodingPointException e) {
+
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
+                HttpStatus.CONFLICT.value(),
+                e.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(errorResponseDTO.Status()).body(errorResponseDTO);
     }
 }
