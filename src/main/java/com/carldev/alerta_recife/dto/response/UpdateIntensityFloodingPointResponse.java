@@ -4,6 +4,7 @@ import com.carldev.alerta_recife.utils.IntensityOfTheFlooding;
 
 public record UpdateIntensityFloodingPointResponse(
         Long id,
+        String street,
         String logger,
         String referencePoint,
         String neighborhood,
@@ -12,6 +13,4 @@ public record UpdateIntensityFloodingPointResponse(
         IntensityOfTheFlooding intensity,
         Integer confirmationVotes
 ) {
-
-
 }
