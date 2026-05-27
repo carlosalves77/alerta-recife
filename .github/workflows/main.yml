@@ -1,0 +1,42 @@
+name: CI/CD Homelab - Alerta Recife Backend
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Gerar Tag de Versão (Git SHA)
+        id: get_version
+        run: |
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          echo "PROJECT_VERSION=${SHORT_SHA}" >> $GITHUB_ENV
+          echo "Versão definida para a imagem: ${SHORT_SHA}"
+      - name: Login no Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build e Push da Imagem
+        run: |
+          echo "Buildando imagem do frontend versão: $PROJECT_VERSION"
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/alerta-recife-frontend:$PROJECT_VERSION .
+          docker push ${{ secrets.DOCKER_USERNAME }}/alerta-recife-frontend:$PROJECT_VERSION
+   
+      - name: Atualizar Deployment no Kubernetes (Deploy Direto)
+        run: |
+          echo "Injetando a nova imagem no cluster K3s..."
+          
+          kubectl set image deployment/alerta-recife-backend alerta-recife=${{ secrets.DOCKER_USERNAME }}/alerta-recife-backend:$PROJECT_VERSION
+          
+          echo "Acompanhando o status da atualização (Rollout)..."
+          kubectl rollout status deployment/alerta-recife-backend
+          
+          echo "Deploy finalizado com sucesso!"
