@@ -1,0 +1,1 @@
+ALTER TABLE flooding_points ADD COLUMN description VARCHAR(255);

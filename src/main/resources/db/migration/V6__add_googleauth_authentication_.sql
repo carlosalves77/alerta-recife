@@ -1,0 +1,2 @@
+ADD COLUMN auth_provider VARCHAR(255) DEFAULT 'LOCAL' NOT NULL
+CHECK (auth_provider IN ('LOCAL', 'GOOGLE'));
