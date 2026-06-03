@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface FloodingPointsRepository extends JpaRepository<FloodingPoints, Long> {
@@ -34,5 +35,10 @@ public interface FloodingPointsRepository extends JpaRepository<FloodingPoints, 
     @Transactional
     @Query("UPDATE FloodingPoints f SET f.confirmationVotes = confirmationVotes +1 WHERE f.id = :id")
     void incrementConfirmationVotes(@Param("id") Long id);
+
+    Optional<FloodingPoints> findByIdAndCreatedById(Long id, UUID userId);
+
+    @Query("SELECT p FROM FloodingPoints p WHERE p.active = true AND p.createdBy.id = :id")
+    List<FloodingPoints> findFloodingPointsByUserId(@Param("id") UUID id);
 
 }
