@@ -15,7 +15,8 @@ public record GetAllFloodingPointResponse(
         Double longitude,
         IntensityOfTheFlooding intensity,
         Integer confirmationVotes,
-        List<String> images
+        List<String> images,
+        UserPublicResponse user
 ) {
 
 }
