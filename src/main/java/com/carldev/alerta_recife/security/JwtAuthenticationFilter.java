@@ -5,6 +5,7 @@ import com.carldev.alerta_recife.service.UserdetailsServiceImpl;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -13,10 +14,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @Component
 @RequiredArgsConstructor
@@ -63,6 +64,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
+            } else if (request.getServletPath().startsWith("/api")) {
+                SecurityContextHolder.clearContext();
             }
         } catch (JwtException e) {
             response.sendError(
@@ -77,9 +80,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String resolveToken(HttpServletRequest request) {
-        String header = request.getHeader(jwtConfig.getHeaderName());
-        if (StringUtils.hasText(header) && header.startsWith(jwtConfig.getTokenPrefix())) {
-            return header.substring(jwtConfig.getTokenPrefix().length());
+
+        if (request.getCookies() != null) {
+            String cookieToken = Arrays.stream(request.getCookies())
+                    .filter(c -> "auth_token".equals(c.getName()))
+                    .map(Cookie::getValue)
+                    .findFirst()
+                    .orElse(null);
+
+            if (cookieToken != null) return cookieToken;
+        }
+
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
         }
 
         return null;
