@@ -22,4 +22,5 @@ public interface AuthRepository extends JpaRepository<UserAuth, UUID> {
     @Query("UPDATE UserAuth u SET u.lastLoginAt = :lastLogin WHERE u.id = :id")
     void updateLastLoginById(@Param("id") UUID id,
                             @Param("lastLogin") Instant lastLogin);
+
 }
