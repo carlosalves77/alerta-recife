@@ -27,8 +27,8 @@ jobs:
       - name: Build e Push da Imagem
         run: |
           echo "Buildando imagem do frontend versão: $PROJECT_VERSION"
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/alerta-recife-frontend:$PROJECT_VERSION .
-          docker push ${{ secrets.DOCKER_USERNAME }}/alerta-recife-frontend:$PROJECT_VERSION
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/alerta-recife:$PROJECT_VERSION .
+          docker push ${{ secrets.DOCKER_USERNAME }}/alerta-recife:$PROJECT_VERSION
    
       - name: Atualizar Deployment no Kubernetes (Deploy Direto)
         run: |
