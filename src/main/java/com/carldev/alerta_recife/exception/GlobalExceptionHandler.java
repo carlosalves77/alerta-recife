@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -96,5 +97,23 @@ public class GlobalExceptionHandler extends RuntimeException {
         );
 
         return ResponseEntity.status(errorResponseDTO.Status()).body(errorResponseDTO);
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleNotFound(NoHandlerFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
+                "status", 404,
+                "error", "Not Found",
+                "message", "Endpoint não existe"
+        ));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, Object>> handleGeneric(Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                "status", 500,
+                "error", "Internal Server Error",
+                "message", "Ocorreu um erro inesperado no servidor"
+        ));
     }
 }
