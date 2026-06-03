@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Setter
@@ -57,6 +58,10 @@ public class FloodingPoints {
 
     @OneToMany(mappedBy = "floodingPoint", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FloodingPointImage> images = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserAuth createdBy;
 
     public void addImage(FloodingPointImage image) {
 
